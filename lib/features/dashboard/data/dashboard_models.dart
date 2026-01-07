@@ -58,20 +58,68 @@ class Account {
 @JsonSerializable()
 class Transaction {
   final int id;
-  final String title; // Örn: "Market Alışverişi"
-  final String? description; // Örn: "Migros A.Ş."
-  final double amount; // -320.50 veya +1000.00
-  @JsonKey(name: 'created_at')
-  final String date; // ISO8601 string
+  @JsonKey(name: 'company_id')
+  final int? companyId;
+  @JsonKey(name: 'account_id')
+  final int? accountId;
+  @JsonKey(name: 'contact_id')
+  final int? contactId;
+  @JsonKey(name: 'category_id')
+  final int? categoryId;
+  @JsonKey(defaultValue: '')
+  final String? description;
+  @JsonKey(defaultValue: 0.0)
+  final double amount;
+  @JsonKey(name: 'amount_formatted', defaultValue: '')
+  final String? amountFormatted;
+  @JsonKey(name: 'currency_code', defaultValue: 'TRY')
+  final String? currencyCode;
+  @JsonKey(name: 'currency_rate', defaultValue: 1.0)
+  final double? currencyRate;
+  @JsonKey(name: 'paid_at', defaultValue: '')
+  final String date; // API'de "paid_at" olarak geliyor
+  @JsonKey(defaultValue: 'expense')
   final String type; // income, expense
+  @JsonKey(defaultValue: '')
+  final String? reference;
+  @JsonKey(name: 'payment_method')
+  final String? paymentMethod;
+  @JsonKey(name: 'contact_name', defaultValue: '')
+  final String? contactName;
+  @JsonKey(name: 'category_name', defaultValue: '')
+  final String? categoryName;
+  @JsonKey(name: 'account_name', defaultValue: '')
+  final String? accountName;
+  @JsonKey(name: 'created_at')
+  final String? createdAt;
+  @JsonKey(name: 'updated_at')
+  final String? updatedAt;
+
+  // UI için title - contactName veya categoryName kullan
+  String get title => contactName?.isNotEmpty == true 
+      ? contactName! 
+      : (categoryName?.isNotEmpty == true ? categoryName! : 'İşlem');
 
   Transaction({
     required this.id,
-    required this.title,
+    this.companyId,
+    this.accountId,
+    this.contactId,
+    this.categoryId,
     this.description,
     required this.amount,
+    this.amountFormatted,
+    this.currencyCode,
+    this.currencyRate,
     required this.date,
     required this.type,
+    this.reference,
+    this.paymentMethod,
+    this.contactName,
+    this.categoryName,
+    this.accountName,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
