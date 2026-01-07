@@ -14,10 +14,20 @@ class LoginRequest {
 
 @JsonSerializable()
 class LoginResponse {
-  final String access_token; // Assumed field name based on standard OAuth/JWT
-  final String token_type;
+  final bool success;
+  final LoginData? data;
 
-  LoginResponse({required this.access_token, required this.token_type});
+  LoginResponse({required this.success, this.data});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
+}
+
+@JsonSerializable()
+class LoginData {
+  final String token;
+  final String token_type;
+
+  LoginData({required this.token, required this.token_type});
+
+  factory LoginData.fromJson(Map<String, dynamic> json) => _$LoginDataFromJson(json);
 }

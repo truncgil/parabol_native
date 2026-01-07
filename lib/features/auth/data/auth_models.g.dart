@@ -16,12 +16,22 @@ Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
 
 LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
     LoginResponse(
-      access_token: json['access_token'] as String,
-      token_type: json['token_type'] as String,
+      success: json['success'] as bool,
+      data:
+          json['data'] == null
+              ? null
+              : LoginData.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
-    <String, dynamic>{
-      'access_token': instance.access_token,
-      'token_type': instance.token_type,
-    };
+    <String, dynamic>{'success': instance.success, 'data': instance.data};
+
+LoginData _$LoginDataFromJson(Map<String, dynamic> json) => LoginData(
+  token: json['token'] as String,
+  token_type: json['token_type'] as String,
+);
+
+Map<String, dynamic> _$LoginDataToJson(LoginData instance) => <String, dynamic>{
+  'token': instance.token,
+  'token_type': instance.token_type,
+};

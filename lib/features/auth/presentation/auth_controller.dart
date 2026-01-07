@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/auth_repository.dart';
 import '../data/auth_models.dart';
 import '../../../core/storage/storage_service.dart';
+import 'auth_provider.dart';
 
 part 'auth_controller.g.dart';
 
@@ -18,9 +19,14 @@ class AuthController extends _$AuthController {
       final repository = ref.read(authRepositoryProvider);
       final response = await repository.login(LoginRequest(email: email, password: password));
       
-      await ref.read(storageServiceProvider).setToken(response.access_token);
-      
-      state = const AsyncData(null);
+      if (response.success && response.data != null) {
+         await ref.read(storageServiceProvider).setToken(response.data!.token);
+         // Auth durumunu güncelle
+         ref.read(authStateProvider.notifier).loginSuccess();
+         state = const AsyncData(null);
+      } else {
+         throw Exception('Giriş başarısız: Geçersiz yanıt.');
+      }
     } catch (e, st) {
       state = AsyncError(e, st);
     }
